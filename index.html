@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Viagem Mágica do Linho em Portugal</title>
+    <!-- Google Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;800&family=Montserrat:wght@700;800&family=Merriweather:wght@300;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --primary-grad: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --blue-linho: #4A90E2;
+            --blue-dark: #1a2a3a;
+            --gold-fiber: #D4AF37;
+            --gold-light: #F1C40F;
+            --white-cloth: #FFFFFF;
+            --success: #2ecc71;
+            --error: #e74c3c;
+            --shadow-premium: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            --transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            outline: none;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f2f5;
+            color: var(--blue-dark);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Montserrat', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: -0.5px;
+        }
+
+        #app-container {
+            max-width: 100%;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .screen {
+            display: none;
+            flex: 1;
+            padding: 3rem 1.5rem;
+            animation: slideIn 0.6s ease-out;
+        }
+
+        .screen.active {
+            display: flex;
+            flex-direction: column;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px) scale(0.99); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        /* Ecrã Inicial */
+        #screen-intro {
+            background: linear-gradient(rgba(118, 75, 162, 0.5), rgba(102, 126, 234, 0.5)),
+                url('https://images.unsplash.com/photo-1590233064032-42997637841c?auto=format&fit=crop&q=80&w=1600') center/cover;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: white;
+            padding: 0;
+        }
+
+        .intro-card {
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(25px);
+            padding: 4rem 3rem;
+            border-radius: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            max-width: 600px;
+            width: 90%;
+            box-shadow: var(--shadow-premium);
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 1.4rem;
+            border-radius: 20px;
+            border: none;
+            margin: 2rem 0;
+            font-size: 1.2rem;
+            text-align: center;
+            color: var(--blue-dark);
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn {
+            background: var(--gold-fiber);
+            color: white;
+            padding: 1.2rem 3.5rem;
+            border-radius: 60px;
+            border: none;
+            font-weight: 800;
+            cursor: pointer;
+            transition: var(--transition);
+            text-transform: uppercase;
+            box-shadow: 0 10px 25px rgba(212, 175, 55, 0.4);
+        }
+
+        .btn:hover {
+            transform: translateY(-5px);
+            background: var(--gold-light);
+        }
+
+        /* Menu Principal */
+        .grid-menu {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 2rem;
+            margin-top: 4rem;
+        }
+
+        .menu-item {
+            background: white;
+            padding: 3.5rem 2rem;
+            border-radius: 30px;
+            text-align: center;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.05);
+            cursor: pointer;
+            transition: var(--transition);
+            border: 1px solid #f0f0f0;
+        }
+
+        .menu-item:hover {
+            transform: translateY(-15px);
+            box-shadow: var(--shadow-premium);
+            border-color: var(--blue-linho);
+        }
+
+        .menu-item i {
+            font-size: 3.5rem;
+            background: var(--primary-grad);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1.5rem;
+            display: block;
+            font-style: normal;
+        }
+
+        /* Infografias */
+        .infographic-wrapper {
+            margin: 2rem auto;
+            width: 100%;
+            max-width: 850px;
+            text-align: center;
+        }
+
+        .infographic-container {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            background: #fff;
+            border-radius: 30px;
+            box-shadow: var(--shadow-premium);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid #eee;
+            cursor: zoom-in;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .infographic-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            padding: 10px;
+        }
+
+        /* Modal Zoom */
+        #modal-zoom {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(10, 10, 20, 0.95);
+            z-index: 4000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(15px);
+            cursor: zoom-out;
+        }
+
+        #modal-zoom img { max-width: 98%; max-height: 95vh; border-radius: 20px; object-fit: contain; }
+
+        /* Acordeão */
+        .accordion-item {
+            background: white;
+            margin-bottom: 1.5rem;
+            border-radius: 25px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.03);
+            transition: var(--transition);
+        }
+
+        .accordion-header {
+            padding: 1.8rem 2.5rem;
+            font-weight: 800;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #fff;
+            color: #2c3e50;
+        }
+
+        .accordion-header span { transition: transform 0.5s; font-size: 1.8rem; color: var(--blue-linho); }
+        .accordion-item.active .accordion-header span { transform: rotate(135deg); color: var(--error); }
+
+        .accordion-content {
+            padding: 0 3rem;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.8s ease;
+            background: #fff;
+            font-size: 1.1rem;
+            color: #444;
+        }
+
+        .accordion-item.active .accordion-content {
+            padding: 2rem 3rem 3rem;
+            max-height: 3000px;
+            border-top: 1px solid #f9f9f9;
+        }
+
+        /* Galeria Multimédia - Layout Cinema Moderno */
+        .media-box {
+            background: white;
+            padding: 3rem;
+            border-radius: 40px;
+            box-shadow: var(--shadow-premium);
+            margin-bottom: 4rem;
+            max-width: 1100px;
+            margin-inline: auto;
+        }
+
+        .carousel-container {
+            background: #000;
+            border-radius: 30px;
+            overflow: hidden;
+            margin: 0 auto;
+            max-width: 1000px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+
+        .slide-display {
+            aspect-ratio: 16 / 9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #111;
+            position: relative;
+        }
+
+        .slide-img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            cursor: zoom-in;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+            position: absolute;
+        }
+
+        .slide-img.active { opacity: 1; position: relative; }
+
+        .carousel-controls {
+            display: flex;
+            justify-content: space-between;
+            padding: 1.5rem 2rem;
+            background: #f8fafc;
+            align-items: center;
+            border-top: 1px solid #eee;
+        }
+
+        .carousel-btn {
+            padding: 0.8rem 1.5rem;
+            border-radius: 50px;
+            border: 2px solid var(--blue-linho);
+            background: white;
+            color: var(--blue-linho);
+            font-weight: 800;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .carousel-btn:hover { background: var(--blue-linho); color: white; }
+
+        /* Vídeo */
+        video {
+            width: 100%;
+            max-width: 1000px;
+            aspect-ratio: 16 / 9;
+            border-radius: 30px;
+            background: #000;
+            display: block;
+            margin: 0 auto;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+        }
+
+        /* Laboratório */
+        .lab-controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 15px;
+            max-width: 1000px;
+            margin: 2rem auto;
+        }
+
+        .lab-btn {
+            background: white; padding: 1.5rem 1rem;
+            border-radius: 20px; text-align: center;
+            cursor: pointer; transition: var(--transition);
+            border: 2px solid transparent; font-weight: 700;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            display: flex; align-items: center; justify-content: center;
+        }
+
+        .lab-btn:hover, .lab-btn.active {
+            background: var(--primary-grad); color: white; transform: translateY(-5px);
+        }
+
+        /* Botão Destaque Infografia */
+        .lab-btn-info {
+            background: #fdf6e3;
+            border: 2px solid var(--gold-fiber);
+            color: var(--gold-fiber);
+        }
+
+        #lab-video-container {
+            margin-top: 2rem; border-radius: 35px; overflow: hidden;
+            box-shadow: var(--shadow-premium); border: 8px solid white;
+            background: #000; max-width: 1000px; margin-inline: auto;
+            opacity: 0; transition: opacity 0.5s;
+        }
+
+        #lab-video-container.visible { opacity: 1; }
+
+        /* Quiz UI */
+        .quiz-card {
+            background: white; padding: 4rem 3rem; border-radius: 45px;
+            box-shadow: var(--shadow-premium); max-width: 900px; margin: auto;
+        }
+
+        .progress-container {
+            width: 100%; height: 12px; background: #f0f0f0; border-radius: 10px; margin-bottom: 3rem; overflow: hidden;
+        }
+
+        .progress-bar { height: 100%; background: var(--primary-grad); width: 0%; transition: width 0.5s; }
+
+        .option-btn {
+            padding: 1.5rem; border: 2px solid #f5f7fa; border-radius: 25px;
+            background: #fff; cursor: pointer; transition: 0.3s;
+            font-size: 1.15rem; text-align: left; font-weight: 600;
+            width: 100%; margin-bottom: 12px;
+        }
+
+        .option-btn:hover { border-color: var(--blue-linho); transform: translateX(10px); }
+        .option-btn.correct { background-color: #d4edda; border-color: #28a745; }
+        .option-btn.wrong { background-color: #f8d7da; border-color: #dc3545; }
+
+        /* Jogos */
+        .term-bank {
+            background: #f4f6f9; padding: 30px; border-radius: 35px; margin-bottom: 40px;
+            display: flex; flex-wrap: wrap; justify-content: center; gap: 15px;
+        }
+
+        .match-card {
+            display: grid; grid-template-columns: 1fr 220px; gap: 25px;
+            background: white; padding: 25px; border-radius: 25px;
+            align-items: center; box-shadow: 0 8px 20px rgba(0,0,0,0.04); margin-bottom: 20px;
+            border: 2px solid transparent;
+        }
+
+        .drop-zone {
+            min-height: 90px; background: #fdfdfd; border: 3px dashed #d1d9e6;
+            border-radius: 20px; padding: 15px; display: flex; align-items: center;
+            justify-content: center; text-align: center; font-size: 0.95rem; font-weight: 600;
+        }
+
+        .draggable {
+            background: var(--primary-grad); color: white; padding: 15px 25px;
+            border-radius: 15px; cursor: move; font-weight: 800; box-shadow: 0 10px 20px rgba(118, 75, 162, 0.3);
+        }
+
+        /* Resultados */
+        .score-circle {
+            width: 220px; height: 220px; border-radius: 50%; background: white;
+            border: 15px solid var(--gold-fiber); display: flex; align-items: center;
+            justify-content: center; font-size: 4.5rem; font-weight: 900;
+            margin: 3rem auto; color: #1a2a3a; box-shadow: var(--shadow-premium);
+        }
+
+        .review-card {
+            background: white; padding: 2.5rem; border-radius: 30px; margin-bottom: 2rem;
+            border-left: 10px solid #eee; text-align: left; box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        }
+
+        .back-btn {
+            position: fixed; top: 30px; left: 30px; background: white; width: 65px; height: 65px;
+            border-radius: 50%; display: none; align-items: center; justify-content: center;
+            box-shadow: var(--shadow-premium); cursor: pointer; z-index: 3500; transition: 0.3s;
+        }
+        .back-btn:hover { transform: scale(1.1); color: var(--blue-linho); }
+
+        footer { text-align: center; padding: 5rem; color: #99aab5; font-size: 0.9rem; font-weight: 600; }
+
+        @media (max-width: 800px) {
+            .match-card { grid-template-columns: 1fr; }
+            .media-box { padding: 1.5rem; }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="app-container">
+        <!-- Modal para Zoom -->
+        <div id="modal-zoom" onclick="closeZoom()">
+            <img id="modal-img" src="" alt="Zoom Visual">
+        </div>
+
+        <div id="back-btn" class="back-btn" onclick="showScreen('screen-menu')">
+            <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+        </div>
+
+        <!-- Ecrã Intro -->
+        <div id="screen-intro" class="screen active">
+            <div class="intro-card">
+                <h1>A Viagem Mágica do Linho</h1>
+                <p style="font-size: 1.4rem; font-weight: 400; margin-top: 10px;">Património Tecido pela História de Portugal</p>
+                <input type="text" id="student-name" placeholder="Como te chamas, Explorador?">
+                <button class="btn" onclick="startApp()">Entrar na Jornada</button>
+            </div>
+        </div>
+
+        <!-- Menu Principal -->
+        <div id="screen-menu" class="screen">
+            <div style="text-align: center; margin-bottom: 3rem;">
+                <h2 id="welcome-msg" style="font-size: 2.5rem; color: #1a2a3a;">Bem-vindo!</h2>
+                <p style="color: #7f8c8d; font-size: 1.2rem;">O conhecimento é a semente. Vamos cultivar?</p>
+            </div>
+            <div class="grid-menu">
+                <div class="menu-item" onclick="showScreen('screen-guide')"><i>📖</i><span>Guia de Estudo</span></div>
+                <div class="menu-item" onclick="showScreen('screen-gallery')"><i>🎬</i><span>Galeria Multimédia</span></div>
+                <div class="menu-item" onclick="showScreen('screen-lab')"><i>🔬</i><span>Laboratório do Tear</span></div>
+                <div class="menu-item" onclick="showScreen('screen-flashcards')"><i>🃏</i><span>Flashcards</span></div>
+                <div class="menu-item" onclick="startQuiz()"><i>❓</i><span>Quiz de Mestria</span></div>
+                <div class="menu-item" onclick="showScreen('screen-games')"><i>🎮</i><span>Desafios Práticos</span></div>
+                <div class="menu-item" onclick="window.open('casos.html', '_blank')"><i>📂</i><span>Dossiê Cultural</span></div>
+            </div>
+        </div>
+
+        <!-- Guia de Estudo -->
+        <div id="screen-guide" class="screen">
+            <h2 style="text-align:center; font-size: 2rem; margin-bottom: 2rem;">Biblioteca Digital do Linho</h2>
+            <div class="infographic-wrapper">
+                <div class="infographic-container" onclick="openZoom('./infografia.jpg')">
+                    <img src="./infografia.jpg" alt="Infografia Ciclo" onerror="this.src='https://via.placeholder.com/800x450?text=Infografia+Geral+do+Ciclo+do+Linho'">
+                </div>
+            </div>
+            <div id="study-accordion" style="max-width: 1000px; margin: 3rem auto;"></div>
+        </div>
+
+        <!-- Galeria Multimédia -->
+        <div id="screen-gallery" class="screen">
+            <h2 style="text-align:center; margin-bottom: 3rem;">Experiência Imersiva</h2>
+            
+            <div class="media-box">
+                <h3 style="margin-bottom:1.5rem; color: var(--blue-linho); text-align: center;">🎬 O Vídeo do Ciclo</h3>
+                <video id="gallery-video" controls src="./video.mp4" poster="https://via.placeholder.com/1000x560?text=O+Trabalho+Ancestral+do+Linho"></video>
+            </div>
+
+            <div class="media-box" style="background: #f8fbff; border: 1px solid #e1e8f0;">
+                <h3 style="margin-bottom:1.5rem; color: var(--blue-linho); text-align: center;">🎙️ Podcast: Estórias de Outrora</h3>
+                <div style="max-width: 800px; margin: 0 auto;">
+                    <audio id="gallery-audio" controls src="./podcast.mp3" style="width: 100%;"></audio>
+                </div>
+            </div>
+
+            <div class="media-box">
+                <h3 style="margin-bottom:1.5rem; color: var(--blue-linho); text-align: center;">🖼️ Slides de Formação (1 a 14)</h3>
+                <div class="carousel-container">
+                    <div class="slide-display" id="slides-inner"></div>
+                    <div class="carousel-controls">
+                        <button class="carousel-btn" onclick="changeSlide(-1)">◀ Anterior</button>
+                        <span id="slide-counter-text" style="font-weight:bold; color:var(--blue-linho);">1 / 14</span>
+                        <button class="carousel-btn" onclick="changeSlide(1)">Próximo ▶</button>
+                    </div>
+                </div>
+                <p style="text-align:center; font-size:0.8rem; margin-top:1rem; color:#666; font-weight: 700;">Clique na imagem para ampliar.</p>
+            </div>
+        </div>
+
+        <!-- Laboratório Visual - Atualizado com novos botões -->
+        <div id="screen-lab" class="screen">
+            <h2 style="text-align:center; margin-bottom: 2rem;">O Laboratório do Artesão</h2>
+            <div class="infographic-wrapper">
+                <div class="infographic-container" onclick="openZoom('./infotear.jpg')">
+                    <img src="./infotear.jpg" alt="Estrutura Tear" onerror="this.src='https://via.placeholder.com/800x450?text=Mecânica+Interna+do+Tear+Tradicional'">
+                </div>
+            </div>
+            
+            <div class="lab-controls">
+                <div class="lab-btn lab-btn-info" onclick="openZoom('./info.dafibraaopano.jpg')">Infografia: Da Fibra ao Pano</div>
+                <div class="lab-btn" onclick="playAnim('sementeira.mp4', this)">Sementeira</div>
+                <div class="lab-btn" onclick="playAnim('macar.mp4', this)">Maçar</div>
+                <div class="lab-btn" onclick="playAnim('branquear.mp4', this)">Branquear</div>
+                <div class="lab-btn" onclick="playAnim('fiar.mp4', this)">Fiar</div>
+                <div class="lab-btn" onclick="playAnim('tear.mp4', this)">Tear</div>
+                <div class="lab-btn" onclick="playAnim('tearreal.mp4', this)">Tear Real</div>
+            </div>
+
+            <div id="lab-video-container">
+                <video id="lab-video" controls autoplay loop></video>
+            </div>
+        </div>
+
+        <!-- Flashcards (25 cartas preservadas) -->
+        <div id="screen-flashcards" class="screen">
+            <h2 style="text-align:center;">Cartas de Sabedoria</h2>
+            <div id="flashcard-container" style="perspective: 2000px; height: 380px; margin: 4rem auto; max-width: 520px;"></div>
+            <div style="text-align: center;">
+                <button class="btn" onclick="nextFlashcard()">Próxima Carta</button>
+                <p id="card-counter" style="margin-top: 2rem; font-weight: 800; color: var(--blue-linho); letter-spacing: 2px; font-size: 1.2rem;"></p>
+            </div>
+        </div>
+
+        <!-- Quiz (20 questões preservadas) -->
+        <div id="screen-quiz" class="screen">
+            <div class="quiz-card">
+                <div class="progress-container"><div id="progress-bar" class="progress-bar"></div></div>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 3rem;">
+                    <span id="quiz-progress-text" style="font-weight: 800; font-size: 1.1rem;">Questão 1 de 20</span>
+                    <span id="quiz-score-live" style="color: var(--blue-linho); font-weight: 800; font-size: 1.2rem;">Acertos: 0</span>
+                </div>
+                <h3 id="quiz-question" style="font-size: 1.6rem; margin-bottom: 3rem; color: #2c3e50; line-height: 1.5;">...</h3>
+                <div id="quiz-options"></div>
+                <div id="quiz-feedback" style="margin-top: 3rem; padding: 2rem; border-radius: 25px; display: none;"></div>
+                <button id="next-q-btn" class="btn" style="margin-top: 3rem; width: 100%; display:none;" onclick="loadNextQuestion()">Avançar</button>
+            </div>
+        </div>
+
+        <!-- Jogos -->
+        <div id="screen-games" class="screen">
+            <h2 style="text-align:center; margin-bottom: 4rem;">Arena de Desafios</h2>
+            <section style="margin-bottom: 5rem; max-width: 1000px; margin-inline: auto;">
+                <h3 style="margin-bottom: 25px; color: var(--blue-linho);">🧩 Desafio de Termos</h3>
+                <div id="term-bank" class="term-bank"></div>
+                <div id="match-grid"></div>
+            </section>
+            <section style="margin-bottom: 5rem; max-width: 1000px; margin-inline: auto;">
+                <h3 style="margin-bottom: 25px; color: var(--blue-linho);">🛠️ Ferramentas Ancestrais</h3>
+                <div id="tool-items" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; margin-bottom: 30px;"></div>
+                <div id="tool-drop-zones" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px;">
+                    <div class="drop-zone" data-target="Ripanço"><b>Retirar a baganha.</b></div>
+                    <div class="drop-zone" data-target="Sedeiro"><b>Assedar a fibra.</b></div>
+                    <div class="drop-zone" data-target="Maça"><b>Partir a casca.</b></div>
+                    <div class="drop-zone" data-target="Lançadeira"><b>Cruzar os fios.</b></div>
+                </div>
+            </section>
+            <section style="max-width: 700px; margin-inline: auto;">
+                <h3 style="margin-bottom: 25px; color: var(--blue-linho);">⏳ O Ciclo em Ordem</h3>
+                <div id="timeline-container" style="display: flex; flex-direction: column; gap: 15px;"></div>
+                <button class="btn" style="margin-top: 3rem; width:100%;" onclick="checkTimeline()">Validar Sequência</button>
+            </section>
+        </div>
+
+        <!-- Resultados -->
+        <div id="screen-results" class="screen">
+            <div class="quiz-card" style="text-align: center;">
+                <h2 style="font-size: 2.5rem;">Relatório de Mestria</h2>
+                <p id="res-name" style="font-size: 1.8rem; font-weight: 800; color: #764ba2; margin-top: 15px;"></p>
+                <div id="score-circle" class="score-circle">0%</div>
+                <div id="res-badge" style="font-size: 1.8rem; margin-bottom: 1.5rem; font-weight: 800;"></div>
+                <p id="res-msg" style="font-size: 1.2rem; color: #555; max-width: 600px; margin-inline: auto;"></p>
+                <div id="review-container" style="margin-top: 3rem;"></div>
+                <button class="btn" style="margin-top: 4rem;" onclick="location.reload()">Refazer Percurso</button>
+            </div>
+        </div>
+
+        <footer>Teodósio Faria ©2025 — A Herança Mágica do Linho Português</footer>
+    </div>
+
+    <script>
+        const state = {
+            studentName: '', quizData: [], userAnswers: [],
+            currentQuestionIndex: 0, quizScore: 0,
+            screens: ['screen-intro', 'screen-menu', 'screen-guide', 'screen-gallery', 'screen-lab', 'screen-flashcards', 'screen-quiz', 'screen-games', 'screen-results'],
+            currentSlide: 1, totalSlides: 14, currentFlashIndex: 0
+        };
+
+        const studyData = [
+            { title: "1. Introdução: O Fio Dourado da Tradição Portuguesa", content: "O linho, em Portugal, é muito mais do que uma simples planta; é um pilar da cultura e da vida comunitária que marcou gerações. Durante séculos, representou <b>um valioso recurso</b> cuja utilização se estendia do vestuário à medicina, ocupando um lugar de destaque na vida social de cada comunidade. A sua produção, rodeada de ritos e saberes transmitidos ao longo do tempo, unia as pessoas em torno de um objetivo comum. <br> O <b>linho (Linum usitatissimum L.)</b> é uma planta herbácea da qual se extraem fibras longas para a fabricação de tecidos e sementes oleaginosas, a linhaça. A sua cultura é milenar e, na Península Ibérica, foram encontrados vestígios de sementes que datam de entre 2.000 e 2.500 a.C., provando a sua profunda e antiga ligação com o nosso território." },
+            { title: "2. Ciclo Agrícola: Da Terra ao Linhal", content: "A sementeira é o berço de tudo. Em Portugal, o <b>Linho Galego</b> semeia-se na Primavera (Março/Abril) em terras frescas e de regadio. O <b>Linho Mourisco</b> é lançado no Outono, sendo mais rústico. A planta atinge 1m de altura e termina com uma flor azul. A colheita, chamada <b>Arrinca</b>, é feita à mão, arrancando a planta pela raiz para não perder o comprimento da fibra têxtil." },
+            { title: "3. Os Tormentos: A Purificação da Fibra", content: "Transformar planta em fio é sofrimento e paciência. Primeiro a <b>Ripagem</b> para tirar as sementes (baganha). Depois o <b>Alagamento/ Curtimenta</b> em água corrente por 8-15 dias para fermentar a casca. Depois de seco, vem a <b>Maçagem</b> com a maça de madeira a bater nos caules sobre uma pedra lisa para quebrar e soltar a parte lenhosa já apodrecida e a <b>Espadelagem</b> com a espadela para limpar as 'arestas' (restos lenhosos). As mulheres trabalham a fibra sobre um suporte de madeira, <b>o cortiço</b>. <br>Esta tarefa era um importante evento social, muitas vezes realizado em grupo e ao ar livre:<br> <em>Enquanto espadelam, cantam em coro: uma começa o canto e as outras continuam. Entrementes vêm os namorados, que se sentam ao pé das espadeladeiras.</em>" },
+            { title: "4. A Fiação: A Arte do Fio Infinito", content: "O processo de <b>assedar (ou sedar)</b> consiste em pentear as fibras num sedeiro, uma espécie de escova com pregos ou arame, para as separar e desembaraçar das fibras. As fibras limpas chamam-se <b>Estrigas</b>. São colocadas na <b>Roca</b>. A <b>fiação</b> é a arte de torcer as fibras para criar um fio contínuo e coeso. A fiadeira puxa as fibras e torce-as com o <b>Fuso</b>. O linho gosta de humidade, por isso usava-se saliva para tornar o fio mais brilhante, fino e resistente. O fio acumulado no fuso chama-se <b>Maçaroca</b>." },
+            { title: "5. A Tecelagem: O Nascimento do Pano", content: "O fio, ainda em maçarocas, inicia o seu aperfeiçoamento num fluxo contínuo de tarefas. Primeiro, é desenrolado no sarilho para formar grandes laçadas chamadas <b>meadas</b>. O fio é branqueado na <b>Barrela</b> (cozido com cinza de lareira) e posto a <b>Corar</b> ao sol. No <b>Tear</b>, a tecedeira prepara a <b>Teia</b> (fios longitudinais) e entrelaça a <b>Trama</b> (levada pela lançadeira). É um trabalho de precisão rítmica que produz o pano de linho eterno." },
+            { title: "6. Conclusão: Um Saber que Perdura no Tempo", content: "A jornada do linho, da semente ao tecido, é uma viagem que envolve muitos tormentos, mas que representa um património cultural de valor inestimável. Este ciclo não produzia apenas tecido; unia a comunidade através do trabalho partilhado, das cantigas e dos serões." }
+        ];
+
+        const fullGlossary = [
+            { t: "Alagar", d: "Mergulhar o linho em água para macerar e soltar a fibra." },
+            { t: "Arestas", d: "Fragmentos lenhosos do caule que se soltam na limpeza." },
+            { t: "Arrincar", d: "Colheita manual retirando a planta inteira pela raiz." },
+            { t: "Baganha", d: "Cápsula que contém as sementes oleaginosas (linhaça)." },
+            { t: "Barrela", d: "Branqueamento do fio através de lavagem com cinza." },
+            { t: "Canela", d: "Pequeno carreto de fio que se insere na lançadeira." },
+            { t: "Corar", d: "Exposição das meadas húmidas ao sol para branquear." },
+            { t: "Casal", d: "Estrutura de madeira utilizada na preparação da urdidura." },
+            { t: "Dobar", d: "Ação de enrolar o fio de uma meada para formar um novelo." },
+            { t: "Espadela", d: "Instrumento de madeira para bater e limpar as fibras." },
+            { t: "Estopa", d: "Fibra de qualidade média, usada para panos mais grossos." },
+            { t: "Estriga", d: "Fibra fina e limpa, pronta para ser fiada." },
+            { t: "Fiar", d: "Processo de torcer as fibras para formar um fio contínuo." },
+            { t: "Fuso", d: "Peça de madeira que torce e enrola o fio fiado." },
+            { t: "Lançadeira", d: "Peça do tear que transporta o fio da trama." },
+            { t: "Lenho", d: "Parte lenhosa do caule que envolve a fibra têxtil." },
+            { t: "Linhaça", d: "Semente do linho, rica em óleo e propriedades têxteis." },
+            { t: "Maça", d: "Martelo de madeira usado na maçagem do linho." },
+            { t: "Maçagem", d: "Ato de bater nos caules para partir a casca seca." },
+            { t: "Maçaroca", d: "Fio fiado que fica enrolado no fuso." },
+            { t: "Meada", d: "Grande laçada de fio formada no sarilho." },
+            { t: "Novelo", d: "Bola de fio obtida ao enrolar o fio de uma meada." },
+            { t: "Pente", d: "Peça do tear que organiza os fios da teia." },
+            { t: "Ripanço", d: "Grande pente de ferro para separar baganha do caule." },
+            { t: "Roca", d: "Ferramenta onde a estriga é colocada para fiação." },
+            { t: "Sarilho", d: "Dispositivo para transformar maçarocas em meadas." },
+            { t: "Sedeiro", d: "Escova de pregos para assedar (separar fibras)." },
+            { t: "Tascar", d: "Operação de limpeza final da fibra." },
+            { t: "Tear", d: "Estrutura complexa de madeira usada para tecer." },
+            { t: "Tumentos", d: "Fibras curtas e ásperas de menor qualidade." },
+            { t: "Urdir", d: "Operação de preparar a teia vertical para o tear." },
+            { t: "Urdideira", d: "Estrutura giratória onde se preparam os fios da teia." }
+        ];
+
+        const flashcardsArr = [
+            { f: "Nome científico do linho?", b: "Linum usitatissimum L." },
+            { f: "O que é linhaça?", b: "Semente para plantação ou fins medicinais." },
+            { f: "Linho de Outono?", b: "Linho Mourisco." },
+            { f: "O que é Arrinca?", b: "Colheita manual pela raiz." },
+            { f: "Para que serve Ripanço?", b: "Retirar as sementes (baganha)." },
+            { f: "Dias na água?", b: "8 a 15 dias para fermentação." },
+            { f: "O que é Maçagem?", b: "Bater com a maça para partir a casca seca." },
+            { f: "Função do Sedeiro?", b: "Separar o linho fino da estopa grossa." },
+            { f: "O que segura a Roca?", b: "A estriga (fibra pronta a fiar)." },
+            { f: "Fio no fuso?", b: "Chama-se Maçaroca." },
+            { f: "Função do Sarilho?", b: "Transformar maçarocas em meadas." },
+            { f: "O que é Barrela?", b: "Limpeza profunda do fio com cinza." },
+            { f: "O que é Urdidura?", b: "Preparação dos fios longitudinais da teia." },
+            { f: "O que faz Lançadeira?", b: "Leva o fio da trama horizontalmente." },
+            { f: "Fator de decadência no Séc. XIX?", b: "Generalização do algodão industrial." },
+            { f: "Dote na Madeira?", b: "Cerca de 8 metros de tecido de linho ('teia')." },
+            { f: "Sensação da camisa de tormentos?", b: "Como uma 'coroa de espinhos' (aspereza)." },
+            { f: "Mulheres que batiam o linho?", b: "Tascadeiras." },
+            { f: "Cidade da finura no Séc. XVI?", b: "Guimarães." },
+            { f: "Mês da sementeira no Minho?", b: "Março." },
+            { f: "Ditado: 9 dias de sol e 9 de...", b: "Orvalho." },
+            { f: "Cor da flor do linho?", b: "Cor azul." },
+            { f: "Ingredientes da Barrela?", b: "Água a ferver e cinza de lareira." },
+            { f: "O que é Corar?", b: "Sol e orvalho para branquear o linho." },
+            { f: "Pente do tear serve para?", b: "Organizar e bater o fio da trama." }
+        ];
+
+        const questionsPool = [
+            { q: "Qual o objetivo de 'alagar' o linho?", o: ["Pintar", "Fermentar para separar fibras", "Secar", "Urdir"], a: 1, e: "A fermentação em água é vital para soltar a fibra têxtil do lenho." },
+            { q: "O que caracteriza o linho galego?", o: ["Semeado no Outono", "Exigente e de regadio", "Muito curto", "Fibra escura"], a: 1, e: "O Galego exige os melhores terrenos e água abundante." },
+            { q: "No Minho, o que sai do sarilho?", o: ["Teia", "Meada", "Novelos", "Estriga"], a: 1, e: "O sarilho organiza o fio fiado no formato de meada." },
+            { q: "O que é a 'baganha'?", o: ["Casca", "Semente", "Raiz", "Fio"], a: 1, e: "É o fruto que guarda a linhaça." },
+            { q: "Ingredientes da barrela?", o: ["Água a ferver e cinza", "Sabão azul", "Orvalho", "Sal"], a: 0, e: "Cinza e água fervida branqueiam o fio." },
+            { q: "A espadelada era um momento de?", o: ["Silêncio", "Convivio social e cantares", "Medo", "Descanso"], a: 1, e: "Momento de reunião social festiva." },
+            { q: "Ferramenta para 'assedar'?", o: ["Ripanço", "Sedeiro", "Espadela", "Gramadeira"], a: 1, e: "O sedeiro funciona como um pente." },
+            { q: "Como se chama o fio fiado no fuso?", o: ["Estriga", "Maçaroca", "Novelo", "Meada"], a: 1, e: "A maçaroca é o fio enrolado." },
+            { q: "Qual a função do sedeiro?", o: ["Semear", "Assedar (pentear fibras)", "Lavar", "Tecer"], a: 1, e: "O sedeiro alinha as fibras." },
+            { q: "O que caracteriza a 'arrinca'?", o: ["Corte com foice", "Arranque pela raiz", "Queima", "Poda"], a: 1, e: "Arranque manual pela raiz preserva a fibra." },
+            { q: "O que faz o sarilho?", o: ["Fia", "Cria meadas", "Monda", "Tira arestas"], a: 1, e: "Organiza o fio em meadas." },
+            { q: "A lançadeira transporta o fio de?", o: ["Teia", "Trama", "Linhaça", "Estopa"], a: 1, e: "O fio da trama cruza horizontalmente." },
+            { q: "Humidade na fiação tradicional?", o: ["Vapor", "Saliva", "Óleo", "Pano"], a: 1, e: "A saliva polia e unia a fibra." },
+            { q: "Maior concorrente do linho no Séc. XIX?", o: ["Seda", "Algodão", "Lã", "Nylon"], a: 1, e: "O algodão industrializado substituiu o linho." },
+            { q: "O que são tomentos?", o: ["Sementes", "Resíduos curtos e ásperos", "Flores", "Tear"], a: 1, e: "Resíduos da limpeza final (ásperos)." },
+            { q: "Onde se senta a tecedeira?", o: ["Cadeira", "Travessa oblíqua do tear", "Banco alto", "Chão"], a: 1, e: "Apoio oblíquo tradicional no tear." },
+            { q: "O que é urdir?", o: ["Branquear", "Preparar a teia", "Limpar caues", "Fiar estopa"], a: 1, e: "Preparar os fios verticais." },
+            { q: "Por que se colhe pela raiz?", o: ["Limpar terreno", "Fibras mais longas", "Separar semente", "Raiz colorida"], a: 1, e: "Preservar comprimento total da fibra." },
+            { q: "Qual a cor da flor do linho?", o: ["Vermelha", "Amarela", "Azul", "Branca"], a: 2, e: "Flor azul característica da planta." },
+            { q: "O que é 'corar'?", o: ["Pintar o pano", "Sol e orvalho para branquear", "Ferver", "Enrolar"], a: 1, e: "Exposição natural ao tempo para branquear." }
+        ];
+
+        const stepsSequence = ["Sementeira", "Arrinca", "Ripagem", "Curtimenta", "Secagem", "Maçagem", "Espadelagem", "Assedagem", "Fiação", "Tecelagem"];
+
+        // UI Core
+        function showScreen(id) {
+            document.querySelectorAll('video, audio').forEach(m => { m.pause(); });
+            state.screens.forEach(s => document.getElementById(s).classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            document.getElementById('back-btn').style.display = (id === 'screen-intro' || id === 'screen-menu') ? 'none' : 'flex';
+            window.scrollTo(0, 0);
+        }
+
+        function startApp() {
+            const n = document.getElementById('student-name').value.trim();
+            if (!n) return alert("Diz-nos o teu nome para começar!");
+            state.studentName = n;
+            document.getElementById('welcome-msg').innerText = `Olá, ${n}!`;
+            showScreen('screen-menu');
+        }
+
+        function openZoom(src) { document.getElementById('modal-img').src = src; document.getElementById('modal-zoom').style.display = 'flex'; }
+        function closeZoom() { document.getElementById('modal-zoom').style.display = 'none'; }
+
+        // SLIDES (Design Inspirado em seda.html - Tamanho Cinema 1000px)
+        function initSlides() {
+            const inner = document.getElementById('slides-inner');
+            inner.innerHTML = '';
+            for (let i = 1; i <= state.totalSlides; i++) {
+                const img = document.createElement('img');
+                img.className = `slide-img ${i === 1 ? 'active' : ''}`;
+                img.src = `./slides${i}.jpg`;
+                img.onclick = () => openZoom(img.src);
+                img.onerror = function() { this.src = `https://via.placeholder.com/1000x560?text=Slide+Formação+${i}`; };
+                inner.appendChild(img);
+            }
+            state.currentSlide = 1;
+            updateSlideUI();
+        }
+
+        function changeSlide(n) {
+            const slides = document.querySelectorAll('.slide-img');
+            if (slides.length === 0) return;
+            slides[state.currentSlide - 1].classList.remove('active');
+            state.currentSlide = (state.currentSlide + n - 1 + state.totalSlides) % state.totalSlides + 1;
+            slides[state.currentSlide - 1].classList.add('active');
+            updateSlideUI();
+        }
+
+        function updateSlideUI() {
+            document.getElementById('slide-counter-text').innerText = `${state.currentSlide} / ${state.totalSlides}`;
+        }
+
+        // LABORATORIO
+        function playAnim(file, btn) {
+            const v = document.getElementById('lab-video');
+            const container = document.getElementById('lab-video-container');
+            document.querySelectorAll('.lab-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            container.classList.add('visible');
+            v.src = `./${file}`;
+            v.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        // GUIA & GLOSSÁRIO
+        function initAccordion() {
+            const c = document.getElementById('study-accordion');
+            c.innerHTML = '';
+            studyData.forEach(i => {
+                const d = document.createElement('div'); d.className = 'accordion-item';
+                d.innerHTML = `<div class="accordion-header" onclick="this.parentElement.classList.toggle('active')">${i.title} <span>+</span></div><div class="accordion-content">${i.content}</div>`;
+                c.appendChild(d);
+            });
+            const t = document.createElement('h3'); t.innerText = "Glossário de Termos A-Z"; t.style.margin = "4rem 0 2rem"; t.style.textAlign = "center"; c.appendChild(t);
+            fullGlossary.forEach(i => {
+                const d = document.createElement('div'); d.className = 'accordion-item';
+                d.innerHTML = `<div class="accordion-header" onclick="this.parentElement.classList.toggle('active')">${i.t} <span>+</span></div><div class="accordion-content">${i.d}</div>`;
+                c.appendChild(d);
+            });
+        }
+
+        // FLASHCARDS
+        function initFlashcards() {
+            const c = document.getElementById('flashcard-container');
+            const item = flashcardsArr[state.currentFlashIndex];
+            c.innerHTML = `<div id="f-card" style="width:100%; height:100%; background:white; border-radius:40px; box-shadow:var(--shadow-premium); display:flex; align-items:center; justify-content:center; text-align:center; padding:3rem; cursor:pointer; transition:transform 0.6s; transform-style:preserve-3d; border:4px solid var(--blue-linho);"><h3 style="font-size:1.8rem; color:#1a2a3a;">${item.f}</h3></div>`;
+            const card = document.getElementById('f-card');
+            card.onclick = function() {
+                const flipped = this.style.transform.includes('180');
+                this.style.transform = flipped ? 'rotateY(0deg)' : 'rotateY(180deg)';
+                setTimeout(() => { this.innerHTML = `<h3 style="font-size:1.5rem; color:#764ba2; transform: ${flipped ? '' : 'scaleX(-1)'}">${flipped ? item.f : item.b}</h3>`; }, 300);
+            };
+            document.getElementById('card-counter').innerText = `CARTÃO ${state.currentFlashIndex + 1} / 25`;
+        }
+        function nextFlashcard() { state.currentFlashIndex = (state.currentFlashIndex + 1) % 25; initFlashcards(); }
+
+        // QUIZ (20 Questões)
+        function startQuiz() {
+            state.quizData = [...questionsPool].sort(() => 0.5 - Math.random());
+            state.userAnswers = []; state.currentQuestionIndex = 0; state.quizScore = 0;
+            showScreen('screen-quiz'); loadQuestion();
+        }
+
+        function loadQuestion() {
+            const q = state.quizData[state.currentQuestionIndex];
+            document.getElementById('progress-bar').style.width = `${(state.currentQuestionIndex / 20) * 100}%`;
+            document.getElementById('quiz-progress-text').innerText = `Questão ${state.currentQuestionIndex + 1} de 20`;
+            document.getElementById('quiz-question').innerText = q.q;
+            document.getElementById('quiz-score-live').innerText = `Acertos: ${state.quizScore}`;
+            const box = document.getElementById('quiz-options'); box.innerHTML = '';
+            q.o.forEach((opt, i) => {
+                const b = document.createElement('button'); b.className = 'option-btn';
+                b.innerText = opt; b.onclick = () => checkAns(i, b); box.appendChild(b);
+            });
+            document.getElementById('quiz-feedback').style.display = 'none';
+            document.getElementById('next-q-btn').style.display = 'none';
+        }
+
+        function checkAns(i, btn) {
+            const q = state.quizData[state.currentQuestionIndex];
+            const btns = document.querySelectorAll('.option-btn');
+            btns.forEach(b => b.disabled = true);
+            state.userAnswers.push(i);
+            const f = document.getElementById('quiz-feedback'); f.style.display = 'block';
+            if (i === q.a) { btn.classList.add('correct'); state.quizScore++; f.style.background = "#d4edda"; f.innerHTML = "✅ Correto!"; }
+            else { btn.classList.add('wrong'); btns[q.a].classList.add('correct'); f.style.background = "#f8d7da"; f.innerHTML = "❌ Errado! " + q.e; }
+            document.getElementById('next-q-btn').style.display = 'block';
+        }
+
+        function loadNextQuestion() {
+            state.currentQuestionIndex++;
+            if (state.currentQuestionIndex < 20) loadQuestion();
+            else finishQuiz();
+        }
+
+        function finishQuiz() {
+            showScreen('screen-results');
+            const p = Math.round((state.quizScore / 20) * 100);
+            animateScore(p);
+            document.getElementById('res-name').innerText = state.studentName;
+            document.getElementById('res-badge').innerText = p >= 70 ? "Mestre do Linho" : "Aprendiz";
+            document.getElementById('res-msg').innerText = p >= 70 ? "Excelente domínio da arte!" : "Estuda o guia para melhorares.";
+            const rev = document.getElementById('review-container'); rev.innerHTML = '';
+            state.quizData.forEach((q, i) => {
+                const u = state.userAnswers[i];
+                const card = document.createElement('div'); card.className = `review-card ${u === q.a ? 'correct' : 'wrong'}`;
+                card.innerHTML = `<b>${i + 1}. ${q.q}</b><br><small>Resposta: ${q.o[u]}</small>`;
+                rev.appendChild(card);
+            });
+        }
+
+        function animateScore(t) {
+            let c = 0; const el = document.getElementById('score-circle');
+            const it = setInterval(() => { if (c >= t) { el.innerText = `${t}%`; clearInterval(it); } else { c++; el.innerText = `${c}%`; } }, 20);
+        }
+
+        // JOGOS (Lógica de Arrastar e Soltar Restaurada)
+        function initGames() {
+            // Desafio Termos
+            const bank = document.getElementById('term-bank');
+            const grid = document.getElementById('match-grid');
+            bank.innerHTML = ''; grid.innerHTML = '';
+            const sub = [...fullGlossary].sort(() => 0.5 - Math.random()).slice(0, 5);
+            sub.forEach(it => {
+                const d = document.createElement('div'); d.className = 'draggable'; d.draggable = true; d.innerText = it.t;
+                d.ondragstart = (e) => e.dataTransfer.setData('text', it.t); bank.appendChild(d);
+                const row = document.createElement('div'); row.className = 'match-card';
+                row.innerHTML = `<div style="font-style:italic;">${it.d}</div><div class="drop-zone" data-ans="${it.t}" ondragover="event.preventDefault()" ondrop="dropTerm(event, this)">Soltar aqui</div>`;
+                grid.appendChild(row);
+            });
+            // Ferramentas
+            const tc = document.getElementById('tool-items'); tc.innerHTML = '';
+            ["Ripanço", "Sedeiro", "Maça", "Lançadeira"].sort(() => 0.5 - Math.random()).forEach(it => {
+                const d = document.createElement('div'); d.className = 'draggable tool-item'; d.innerText = it; d.draggable = true;
+                d.dataset.name = it; d.ondragstart = (e) => e.dataTransfer.setData('tool', it); tc.appendChild(d);
+            });
+            document.querySelectorAll('#tool-drop-zones .drop-zone').forEach(z => {
+                z.ondragover = (e) => e.preventDefault();
+                z.ondrop = function(e) {
+                    const val = e.dataTransfer.getData('tool');
+                    if (val === this.dataset.target) {
+                        this.style.background = "#e6f9ed"; this.style.borderColor = "#27ae60"; this.innerHTML = `✅ <b>${val}</b>`;
+                        document.querySelectorAll('.tool-item').forEach(el => { if(el.dataset.name === val) el.style.display = 'none'; });
+                    }
+                };
+            });
+            // Timeline
+            const tlc = document.getElementById('timeline-container'); tlc.innerHTML = '';
+            [...stepsSequence].sort(() => 0.5 - Math.random()).forEach(s => {
+                const d = document.createElement('div'); d.className = 'match-card timeline-item'; d.draggable = true; d.dataset.v = s;
+                d.innerHTML = `<b>${s}</b>`;
+                d.ondragstart = (e) => { d.classList.add('dragging'); };
+                d.ondragover = (e) => { e.preventDefault(); const dr = document.querySelector('.dragging'); if(dr && dr !== d) tlc.insertBefore(dr, d); };
+                d.ondragend = () => d.classList.remove('dragging');
+                tlc.appendChild(d);
+            });
+        }
+
+        function dropTerm(e, z) {
+            const val = e.dataTransfer.getData('text');
+            if (val === z.dataset.ans) { 
+                z.style.background = "#e6f9ed"; z.style.borderColor = "#27ae60"; z.innerHTML = `✅ <b>${val}</b>`; 
+                document.querySelectorAll('.draggable').forEach(el => { if(el.innerText === val) el.style.display = 'none'; });
+            }
+        }
+
+        function checkTimeline() {
+            document.querySelectorAll('.timeline-item').forEach((it, i) => {
+                it.style.borderColor = it.dataset.v === stepsSequence[i] ? "#28a745" : "#dc3545";
+                it.style.borderWidth = "4px";
+            });
+        }
+
+        window.onload = () => { initAccordion(); initSlides(); initFlashcards(); initGames(); };
+    </script>
+</body>
+</html>

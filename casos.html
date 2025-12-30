@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ciclo do Linho: Património e Tradição</title>
+    <!-- Tailwind CSS para estilização moderna -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;800&family=Montserrat:wght@700;800&display=swap"
+        rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        h1,
+        h2,
+        h3 {
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-out;
+        }
+
+        .accordion-item.active .accordion-content {
+            max-height: 2500px;
+        }
+
+        .flashcard {
+            perspective: 1000px;
+        }
+
+        .flashcard-inner {
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+            cursor: pointer;
+        }
+
+        .flashcard.flipped .flashcard-inner {
+            transform: rotateY(180deg);
+        }
+
+        .flashcard-front,
+        .flashcard-back {
+            backface-visibility: hidden;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            text-align: center;
+            border-radius: 1rem;
+        }
+
+        .flashcard-back {
+            transform: rotateY(180deg);
+        }
+
+        .zoom-img {
+            transition: transform 0.3s ease;
+            cursor: zoom-in;
+        }
+
+        .zoom-img:hover {
+            transform: scale(1.05);
+        }
+
+        .modal-zoom {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .progress-bar-fill {
+            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 text-gray-900">
+
+    <!-- Navegação -->
+    <nav class="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center space-x-2">
+                    <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white">
+                        <i data-lucide="flower"></i>
+                    </div>
+                    <span class="font-extrabold text-xl tracking-tight text-blue-900 uppercase">Ciclo do Linho</span>
+                </div>
+
+                <div class="hidden md:flex items-center space-x-8">
+                    <div class="flex space-x-6 font-medium text-gray-600 border-r pr-8 border-gray-200">
+                        <a href="#dossie" class="hover:text-blue-600 transition">Dossiê Cultural</a>
+                        <a href="#glosario" class="hover:text-blue-600 transition">Glossário</a>
+                        <a href="#atividades" class="hover:text-blue-600 transition">Atividades</a>
+                    </div>
+
+                    <button onclick="goBackToMain()"
+                        class="flex items-center gap-2 bg-blue-50 text-blue-700 px-4 py-2 rounded-lg font-bold hover:bg-blue-100 transition border border-blue-200">
+                        <i data-lucide="arrow-left-circle" class="w-4 h-4"></i>
+                        <span>Aplicação Principal</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="relative py-24 bg-blue-900 text-white overflow-hidden">
+        <div class="absolute inset-0 opacity-20">
+            <div class="absolute inset-0 bg-gradient-to-r from-blue-900 to-transparent z-10"></div>
+            <div
+                class="w-full h-full bg-[url('https://images.unsplash.com/photo-1518384401463-d3876063c195?auto=format&fit=crop&q=80')] bg-cover">
+            </div>
+        </div>
+        <div class="relative z-20 max-w-5xl mx-auto px-4 text-center">
+            <h1 class="text-4xl md:text-7xl font-black mb-6 leading-tight">Património, Tradição & <span
+                    class="text-blue-400">Educação</span></h1>
+            <p class="text-xl text-blue-100 max-w-2xl mx-auto mb-10">Descubra as artes ancestrais do Minho e da Madeira
+                através de um guia interativo.</p>
+        </div>
+    </header>
+
+    <!-- Dossiê Cultural -->
+    <section id="dossie" class="py-20 max-w-5xl mx-auto px-4">
+        <div class="text-center mb-16">
+            <h2 class="text-4xl font-bold text-gray-900 mb-4">Dossiê Cultural</h2>
+            <p class="text-gray-600">Aprofunde o seu conhecimento sobre as especificidades regionais.</p>
+        </div>
+
+        <div class="grid gap-6">
+            <!-- Caso Minho -->
+            <div class="accordion-item border border-gray-200 rounded-3xl bg-white shadow-sm overflow-hidden"
+                id="minho-accordion">
+                <button onclick="toggleAccordion('minho-accordion')"
+                    class="w-full flex items-center justify-between p-8 text-left hover:bg-gray-50 transition">
+                    <div class="flex items-center gap-6">
+                        <div
+                            class="w-14 h-14 bg-red-100 text-red-600 rounded-2xl flex items-center justify-center shadow-inner">
+                            <i data-lucide="heart" class="w-7 h-7"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-2xl font-bold text-gray-800">Os Lenços de Namorados do Minho</h3>
+                            <p class="text-sm text-gray-500 italic">Símbolo de afetos e código social</p>
+                        </div>
+                    </div>
+                    <i data-lucide="chevron-down" class="transition-transform duration-300"></i>
+                </button>
+                <div class="accordion-content bg-white border-t border-gray-100">
+                    <div class="p-8 md:p-12">
+                        <div class="mb-10 text-center">
+                            <h4 class="text-xs font-bold uppercase tracking-widest text-red-500 mb-4">Infografia
+                                Detalhada</h4>
+                            <div
+                                class="relative inline-block overflow-hidden rounded-xl border-4 border-red-50 shadow-lg group">
+                                <img src="./lençodosnamorados.jpg" alt="Lenços de Namorados"
+                                    class="zoom-img max-w-full h-auto" onclick="openZoom(this.src)"
+                                    onerror="this.src='https://images.unsplash.com/photo-1621510456681-233013d24ea2?auto=format&fit=crop&q=80&w=800'">
+                                <div
+                                    class="absolute bottom-4 right-4 bg-white/90 p-2 rounded-full shadow-md pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <i data-lucide="maximize-2" class="w-5 h-5 text-gray-700"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="grid md:grid-cols-2 gap-8 text-gray-700">
+                            <div>
+                                <h5 class="font-bold text-red-700 border-b-2 border-red-100 mb-3 pb-1">Um Símbolo do
+                                    Amor Minhoto</h5>
+                                <p class="text-sm leading-relaxed mb-6">Artefacto etnográfico que transcende o linho
+                                    fino ou algodão. Funciona como um repositório de afetos e um veículo para
+                                    declarações de amor e compromisso.<br>Geograficamente, a sua tradição está
+                                    profundamente enraizada na região do Minho, com especial destaque para os concelhos
+                                    de Vila Verde, Viana do Castelo, Guimarães e Amares. Tradicionalmente bordado por
+                                    mulheres em idade de casar.</p>
+                                <h5 class="font-bold text-red-700 border-b-2 border-red-100 mb-3 pb-1">Evolução
+                                    Histórica</h5>
+                                <p class="text-sm leading-relaxed mb-6">Origens nos adornos da aristocracia dos séculos
+                                    XVII e XVIII, apropriados pelas classes populares.<br>A sua principal função era
+                                    servir como um ritual de conquista e um meio de comunicação amorosa. O processo era
+                                    bem definido: a rapariga em idade de casar bordava o lenço com motivos e, por vezes,
+                                    versos, entregando-o ao seu amado. O uso público do lenço por parte do homem — o
+                                    namorado ou conversado — simbolizava a aceitação do pedido e o início oficial da
+                                    relação, sendo tipicamente usado dobrado ao pescoço. Pelo contrário, a devolução do
+                                    lenço à sua autora significava a recusa da proposta.</p>
+                            </div>
+                            <div>
+                                <h5 class="font-bold text-red-700 border-b-2 border-red-100 mb-3 pb-1">Análise Técnica e
+                                    Artística</h5>
+                                <p class="text-sm leading-relaxed mb-6">Tradicionalmente, são de formato quadrado, com
+                                    dimensões que variam entre 15 e 50 centímetros de lado, e confecionados sobre uma
+                                    base de linho fino ou algodão de cor branca. Bordados em ponto-cruz, ponto-cheio ou
+                                    pé de flor.<br>Os lenços mais antigos são maioritariamente mono ou bicromáticos,
+                                    enquanto a policromia vibrante que hoje associamos a estas peças foi um
+                                    desenvolvimento posterior, refletindo uma maior disponibilidade de linhas de cor e
+                                    uma preferência estética por composições mais alegres. Os motivos gráficos bordados
+                                    nos lenços constituem um rico universo simbólico, diretamente ligado às vivências e
+                                    ao imaginário da comunidade (Amor, Fidelidade, Casamento, Religião, Vindimas,
+                                    Emigração).</p>
+                                <h5 class="font-bold text-red-700 border-b-2 border-red-100 mb-3 pb-1">Conclusão</h5>
+                                <p class="text-sm leading-relaxed">De Declaração de Amor a Emblema Nacional. O Lenço de
+                                    Namorados é um microcosmo da cultura
+                                    minhota, um objeto que conseguiu mapear a transição da esfera íntima para o estatuto
+                                    de emblema nacional, provando que a memória afectiva é um dos mais resilientes fios
+                                    do património cultural.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Caso Madeira -->
+            <div class="accordion-item border border-gray-200 rounded-3xl bg-white shadow-sm overflow-hidden"
+                id="madeira-accordion">
+                <button onclick="toggleAccordion('madeira-accordion')"
+                    class="w-full flex items-center justify-between p-8 text-left hover:bg-gray-50 transition">
+                    <div class="flex items-center gap-6">
+                        <div
+                            class="w-14 h-14 bg-blue-100 text-blue-600 rounded-2xl flex items-center justify-center shadow-inner">
+                            <i data-lucide="mountain" class="w-7 h-7"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-2xl font-bold text-gray-800">O Ciclo do Linho na Madeira</h3>
+                            <p class="text-sm text-gray-500 italic">"Os Tormentos do Linho"</p>
+                        </div>
+                    </div>
+                    <i data-lucide="chevron-down" class="transition-transform duration-300"></i>
+                </button>
+                <div class="accordion-content bg-white border-t border-gray-100">
+                    <div class="p-8 md:p-12">
+                        <div class="mb-10 text-center">
+                            <h4 class="text-xs font-bold uppercase tracking-widest text-blue-500 mb-4">Infografia do
+                                Processo</h4>
+                            <div
+                                class="relative inline-block overflow-hidden rounded-xl border-4 border-blue-50 shadow-lg group">
+                                <img src="./linhonamadeira.jpg" alt="Linho Madeira" class="zoom-img max-w-full h-auto"
+                                    onclick="openZoom(this.src)"
+                                    onerror="this.src='https://images.unsplash.com/photo-1544441893-675973e31985?auto=format&fit=crop&q=80&w=800'">
+                            </div>
+                        </div>
+                        <div class="grid md:grid-cols-2 gap-8 text-gray-700">
+                            <div>
+                                <h5 class="font-bold text-blue-700 border-b-2 border-blue-100 mb-3 pb-1">O Linho na
+                                    Madeira</h5>
+                                <p class="text-sm leading-relaxed mb-6">Pilar fundamental da vida na ilha desde a
+                                    colonização. Estava intrinsecamente ligado à sobrevivência, à autonomia e à
+                                    identidade cultural das populações, constituindo a base da sua resiliência. A
+                                    necessidade de confecionar vestuário e outros artefactos do quotidiano transformou o
+                                    seu cultivo e processamento num ciclo anual de trabalho árduo e meticuloso, uma
+                                    epopeia de conhecimento transmitido entre gerações.</p>
+                                <h5 class="font-bold text-blue-700 border-b-2 border-blue-100 mb-3 pb-1">Da Terra à
+                                    Fibra</h5>
+                                <p class="text-sm leading-relaxed mb-6"><b>Sementeira e Cultivo:</b><br>A sementeira era
+                                    regida
+                                    por um calendário rigoroso, geralmente na primeira sexta-feira de março, na lua nova
+                                    e durante o Carnaval (entrulo), para garantir um linho "fervaço" (alto e robusto). A
+                                    planta, exigente em água e minerais, necessitava de rotação de culturas e prosperava
+                                    em solos planos e bem drenados.<br><b>Colheita:</b> Ocorria entre São João e São
+                                    Pedro (final de junho), sendo crucial para a
+                                    qualidade da fibra. Era manual, com o arranque da planta pela raiz, e as plantas
+                                    eram agrupadas em "mancheias".<br><b>Preparação Inicial:</b> Incluía a Ripagem
+                                    (separação das cápsulas com sementes usando o
+                                    ripanço), a Extração da Linhaça (secagem e joeiragem das sementes para a sementeira
+                                    do ano seguinte) e a Cortimenta (submersão dos molhos em água por 6 a 8 dias para
+                                    decompor os elementos lenhosos, seguida de lavagem).<br><b>Da Secagem à Separação
+                                        das Fibras:</b> O linho lavado era seco ao sol e atado em
+                                    "maçadeiras". Seguiam-se a Massagem (malhar os caules secos para partir a parte
+                                    lenhosa interna, o cal), a Gramagem (uso da gramadeira para triturar as "arestas"
+                                    residuais, libertando os "tumentos", fibras curtas) e a Tasquinha (uso da tasquinha
+                                    ou espedela para remover as últimas arestas). O produto final, a fibra mais limpa e
+                                    pronta para fiação, era a estriga.</p>
+                                <h5 class="font-bold text-blue-700 border-b-2 border-blue-100 mb-3 pb-1">Da Fibra ao Fio
+                                </h5>
+                                <p class="text-sm leading-relaxed mb-6">A <b>fiação</b> era um processo de grande valor,
+                                    transformando a estriga em fio, uma tarefa predominantemente feminina e
+                                    intergeracional. Antes de fiar, ocorria a <b>sedagem</b>, que consistia em pentear a
+                                    estriga com o cedeiro para separar e classificar as fibras em duas qualidades
+                                    distintas. A fiação propriamente dita iniciava-se com as fibras separadas,
+                                    utilizando <b>a roca e o fuso</b>. As mulheres torciam as fibras, num movimento
+                                    paciente,
+                                    para criar um fio coeso. A complexidade da tarefa gerava uma divisão de trabalho,
+                                    com as crianças fiando a estopa mais grossa e as mulheres mais experientes fiando o
+                                    linho puro mais fino. A fiação era uma obrigação diária, estendendo-se pela noite,
+                                    mas também funcionava como um catalisador para a vida comunitária e a partilha de
+                                    experiências.
+                                </p>
+                            </div>
+                            <div>
+                                <h5 class="font-bold text-blue-700 border-b-2 border-blue-100 mb-3 pb-1">Dimensão Social
+                                    e Cultural
+                                </h5>
+                                <p class="text-sm leading-relaxed mb-6">Esta dimensão do ciclo do linho
+                                    transcendia a mera produção, funcionando como um pilar da vida comunitária rural. As
+                                    inúmeras tarefas envolvidas fortaleciam os laços de vizinhança e serviam de veículo
+                                    para a transmissão de tradições orais, estruturando a economia familiar. Os "serões"
+                                    eram eventos de entreajuda e convívio, onde vizinhos se reuniam para tarefas
+                                    demoradas como a fiação, misturando o trabalho com a partilha de histórias e cantos.
+                                    A música, expressa nas "cantigas do linho," refletia o quotidiano, as alegrias e as
+                                    dificuldades dessa vida laboriosa, destacando o valor económico central da fibra.
+                                    Por fim, o linho era também capital social e económico, manifestando-se no "dote,"
+                                    onde uma teia de linho (cerca de 8 metros de tecido) era um bem essencial para as
+                                    filhas casadeiras, representando o trabalho feminino, a riqueza acumulada e o
+                                    saber-fazer transmitido entre gerações, fundamental para a autonomia do novo lar.
+                                </p>
+                                <h5 class="font-bold text-blue-700 border-b-2 border-blue-100 mb-3 pb-1">Do Fio ao
+                                    Tecido
+                                </h5>
+                                <p class="text-sm leading-relaxed mb-6">O fio passava
+                                    pela Formação de Meadas (no sarilho), pela Barrela (branqueamento através de fervura
+                                    em água, cinza e plantas, seguido de secagem ao sol, ou "corar"), e pela Dubagem
+                                    (transferência das meadas branqueadas para novelos com a dobira, garantindo um
+                                    desenrolar uniforme).<br><b>A Ordidura</b> era o processo altamente especializado de
+                                    cálculo e disposição dos fios longitudinais (teia) no tear, realizado por ordideiras
+                                    que utilizavam o Casal (estrutura com 12 compartimentos para novelos) e a Espadilha
+                                    (régua guia).<br><b>A
+                                        Tecelagem</b> começava com a montagem da teia no tiar (tear). Os fios da trama
+                                    (transversais) eram enrolados numa canela e colocados na lançadeira. O tecido nascia
+                                    do movimento rítmico da tecedeira, que abria a teia com os liços e prmideiras para a
+                                    passagem da lançadeira. Após a tecelagem, o tecido era submetido a uma nova barrela
+                                    para atingir a brancura máxima. Do esforço coletivo e prolongado, resultava um
+                                    produto de grande orgulho familiar.</p>
+                                <h5 class="font-bold text-blue-700 border-b-2 border-blue-100 mb-3 pb-1">Conclusão</h5>
+                                <p class="text-sm leading-relaxed">O ciclo do linho na Madeira, outrora vital para a
+                                    sobrevivência e considerado "a riqueza maior", é hoje "praticamente inexistente". A
+                                    dura memória deste trabalho persiste entre os mais velhos, e a tradição sobrevive
+                                    sobretudo na indumentária dos grupos de folclore, que atuam como guardiões deste
+                                    saber-fazer ancestral. A expressão "os tormentos do linho" consolida-se como a
+                                    designação perfeita para este ciclo de sustento e sacrifício, um património
+                                    imaterial cuja memória urge preservar.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Glossário Dinâmico -->
+    <section id="glosario" class="py-16 bg-white border-t border-gray-100">
+        <div class="max-w-5xl mx-auto px-4">
+            <div class="flex items-center gap-4 mb-10">
+                <div class="p-3 bg-blue-600 text-white rounded-xl">
+                    <i data-lucide="book-open"></i>
+                </div>
+                <h2 class="text-3xl font-bold">Glossário de Termos Técnicos</h2>
+            </div>
+            <div id="glosario-grid" class="grid md:grid-cols-3 gap-6"></div>
+        </div>
+    </section>
+
+    <!-- Atividades -->
+    <section id="atividades" class="py-20 bg-gray-100 border-y">
+        <div class="max-w-5xl mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold mb-4 text-gray-900">Consolidação de Conhecimentos</h2>
+                <div class="flex justify-center gap-4 mt-8">
+                    <button onclick="switchTab('quiz')" id="tab-quiz"
+                        class="bg-blue-600 text-white px-8 py-3 rounded-full font-bold shadow-lg transition">Questionário</button>
+                    <button onclick="switchTab('cards')" id="tab-cards"
+                        class="bg-white text-gray-600 px-8 py-3 rounded-full font-bold shadow-sm transition">Flashcards</button>
+                </div>
+            </div>
+
+            <!-- Quiz Container -->
+            <div id="container-quiz" class="max-w-2xl mx-auto bg-white rounded-[2rem] p-10 shadow-2xl">
+                <div id="quiz-intro" class="text-center py-6">
+                    <div
+                        class="w-16 h-16 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i data-lucide="brain"></i>
+                    </div>
+                    <h3 class="text-3xl font-bold mb-4">Desafio do Linho</h3>
+                    <p class="text-gray-600 mb-8">Prove o que aprendeu sobre o património do linho.</p>
+                    <button onclick="startQuiz()"
+                        class="w-full bg-blue-600 text-white py-5 rounded-2xl font-bold text-xl shadow-lg">Começar
+                        Agora</button>
+                </div>
+
+                <div id="quiz-game" class="hidden">
+                    <div class="flex justify-between items-center mb-10">
+                        <span id="quiz-progress"
+                            class="text-xs font-black text-blue-600 uppercase tracking-widest">Questão 1</span>
+                        <div class="h-3 w-40 bg-gray-100 rounded-full overflow-hidden border">
+                            <div id="quiz-bar" class="progress-bar-fill h-full bg-blue-600" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    <h4 id="quiz-question" class="text-2xl font-bold mb-10 text-gray-800">...</h4>
+                    <div id="quiz-options" class="space-y-4"></div>
+                    <div id="quiz-feedback" class="mt-10 p-6 rounded-2xl hidden transform transition-all">
+                        <p id="feedback-text" class="text-sm font-medium leading-relaxed"></p>
+                    </div>
+                    <button id="btn-next" onclick="nextQuestion()"
+                        class="mt-10 w-full bg-blue-600 text-white py-4 rounded-2xl font-bold hidden shadow-lg">Próxima
+                        Questão</button>
+                </div>
+
+                <div id="quiz-result" class="hidden text-center py-8">
+                    <div
+                        class="w-20 h-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <i data-lucide="award" class="w-10 h-10"></i>
+                    </div>
+                    <h3 class="text-4xl font-black mb-4">Parabéns!</h3>
+                    <div class="text-6xl font-black text-blue-600 mb-12" id="quiz-score-display">0 / 0</div>
+                    <button onclick="resetQuiz()"
+                        class="bg-blue-600 text-white px-12 py-4 rounded-2xl font-bold shadow-xl">Tentar
+                        Novamente</button>
+                </div>
+            </div>
+
+            <!-- Flashcards Container -->
+            <div id="container-cards" class="hidden max-w-2xl mx-auto">
+                <div class="relative h-[400px] flashcard" id="flashcard-element">
+                    <div class="flashcard-inner w-full h-full" onclick="flipCard()">
+                        <div class="flashcard-front bg-white shadow-2xl rounded-3xl p-10 border border-blue-50">
+                            <div class="flex flex-col items-center">
+                                <i data-lucide="help-circle" class="w-12 h-12 text-blue-200 mb-6"></i>
+                                <p id="card-front-text"
+                                    class="text-2xl font-bold text-gray-800 text-center leading-tight">...</p>
+                                <p class="mt-8 text-xs text-gray-400 uppercase tracking-widest">Clique para ver a
+                                    resposta</p>
+                            </div>
+                        </div>
+                        <div class="flashcard-back bg-blue-600 text-white shadow-2xl rounded-3xl p-10">
+                            <div class="flex flex-col items-center">
+                                <i data-lucide="check-circle" class="w-12 h-12 text-blue-300 mb-6"></i>
+                                <p id="card-back-text" class="text-2xl font-bold text-center leading-snug">...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex justify-between items-center mt-12 bg-white p-4 rounded-2xl shadow-sm border">
+                    <button onclick="prevCard()"
+                        class="p-4 bg-gray-50 rounded-xl hover:bg-blue-50 text-blue-600 transition"><i
+                            data-lucide="arrow-left"></i></button>
+                    <span id="card-counter" class="font-black text-blue-600 text-lg">1 / 15</span>
+                    <button onclick="nextCard()"
+                        class="p-4 bg-gray-50 rounded-xl hover:bg-blue-50 text-blue-600 transition"><i
+                            data-lucide="arrow-right"></i></button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modal Zoom -->
+    <div id="zoom-modal" class="modal-zoom" onclick="closeZoom()">
+        <img id="zoom-content"
+            class="max-w-[90%] max-h-[90%] object-contain rounded-lg shadow-2xl border-4 border-white/20">
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-blue-950 text-white py-12">
+        <div class="max-w-5xl mx-auto px-4 text-center">
+            <p class="text-blue-400 font-bold mb-4 uppercase tracking-widest text-xs">Recursos Didáticos Digitais</p>
+            <h2 class="text-2xl font-bold mb-8">O Ciclo do Linho em Portugal</h2>
+            <p class="text-sm text-blue-800">Teodósio Faria ©2025 - A Herança Mágica do Linho Português.</p>
+        </div>
+    </footer>
+
+    <script>
+        // --- INICIALIZAÇÃO ---
+        window.onload = function () {
+            lucide.createIcons();
+            renderGlossary();
+        }
+
+        // --- DADOS DO GLOSSÁRIO ---
+        const glossaryData = [
+            { t: "Estriga", d: "Porção de fibra de linho já limpa, penteada e preparada para fiação na roca." },
+            { t: "Barrela", d: "Processo de branqueamento das meadas ou tecidos usando água fervente e cinza vegetal." },
+            { t: "Ripanço", d: "Utensílio com dentes de ferro utilizado para separar as cápsulas das sementes dos caules." },
+            { t: "Estopa", d: "Fibra mais curta e grosseira resultante da limpeza, usada para tecidos utilitários." },
+            { t: "Ordidura", d: "Cálculo e disposição dos fios longitudinais (teia) no tear, feito pelas ordideiras." },
+            { t: "Cortimenta", d: "Submersão do linho em água por 6 a 8 dias para separar fibras de partes lenhosas." },
+            { t: "Tasquinha", d: "Operação para remover as últimas arestas do linho usando a espedela." },
+            { t: "Dobira", d: "Utensílio usado na dubagem para transformar meadas branqueadas em novelos." },
+            { t: "Tumentos", d: "As primeiras fibras de linho, mais curtas e menos resistentes, que se desprendem durante o processo de 'gramar'." },
+            { t: "Sedagem", d: "Processo que consiste em pentear a estriga de linho num 'cedeiro' para separar as fibras longas e finas das mais curtas e grossas (estopa), ordenando-as paralelamente." },
+            { t: "Maçadeiras", d: "Molhos de linho atados após o processo de cortimenta e secagem ao sol, equivalendo a aproximadamente quatro mancheias." },
+            { t: "Teia", d: "O conjunto de fios que se estendem longitudinalmente no tear (cerca de 8 metros no dote)." }
+        ];
+
+        // --- DADOS DO QUIZ ---
+        const quizData = [
+            { q: "Segundo a tradição minhota, como é que um rapaz demonstrava publicamente que tinha aceite o pedido de namoro?", o: ["Escrevia uma carta", "Usava o lenço ao pescoço", "Guardava o lenço num baú", "Devolvia o lenço à bordadeira"], a: 1, hint: "O uso público da peça simbolizava o compromisso oficial." },
+            { q: "Qual é a origem histórica atribuída aos lenços de namorados?", o: ["Arte indígena", "Imitação da nobreza (Séc. XVII/XVIII)", "Criação de freiras no Séc. XIX", "Moda parisiense moderna"], a: 1, hint: "As classes populares imitavam os adornos das classes sociais elevadas." },
+            { q: "Na Madeira, qual é o objetivo da 'cortimenta'?", o: ["Branquear o fio", "Submergir em água", "Secar o linho ao sol", "Extrair as sementes"], a: 1, hint: "A água decompõe os elementos lenhosos, libertando a fibra têxtil." },
+            { q: "O que acontece imediatamente após a 'ripagem'?", o: ["Fiação na roca", "Secagem e joeiragem para extrair a semente", "Branqueamento na barrela", "Tecelagem no tear"], a: 1, hint: "A ripagem separa as cápsulas, que depois precisam de ser abertas para obter a linhaça." },
+            { q: "O que distingue um 'lenço votivo'?", o: ["O uso de cores vibrantes", "Uso em contexto religioso/casamento e poucas cores", "Ausência de bordado", "Uso exclusivo por homens"], a: 1, hint: "São lenços de compromisso ou cerimónia com estética mais sóbria." },
+            { q: "Qual a razão principal dos erros ortográficos nos lenços?", o: ["Código secreto", "Falta de espaço no pano", "Transcrição fonética da fala local", "Regra das cooperativas"], a: 2, hint: "As bordadeiras escreviam exatamente como falavam (fonética minhota)." },
+            { q: "Para que era utilizada a 'estopa'?", o: ["Tecidos finos de luxo", "Enchimento de colchões", "Tecidos grossos e sacos", "Fazer redes de pesca"], a: 2, hint: "Por ser a fibra mais curta e grossa, servia para fins utilitários pesados." },
+            { q: "O que era a 'teia de linho' no dote na Madeira?", o: ["Uma canção regional", "Cerca de 8 metros de tecido pronto", "Uma ferramenta de metal", "Um tipo de semente"], a: 1, hint: "Era um bem essencial que representava autonomia familiar." },
+            { q: "Qual a finalidade da 'barrela'?", o: ["Contar os fios do tear", "Limpar e branquear meadas com cinza", "Tingir o linho de azul", "Separar a linhaça"], a: 1, hint: "A água fervente com cinza removia impurezas e clareava o linho." },
+            { q: "O que é a 'estriga'?", o: ["O caule seco", "A fibra limpa pronta para fiar", "As sementes pretas", "A régua de urdir"], a: 1, hint: "É a porção de fibra já preparada para entrar na fase da roca e do fuso." }
+        ];
+
+        // --- LÓGICA DO GLOSSÁRIO ---
+        function renderGlossary() {
+            const grid = document.getElementById('glosario-grid');
+            if (!grid) return;
+            grid.innerHTML = glossaryData.map(item => `
+                <div class="p-6 bg-gray-50 rounded-2xl border border-gray-100 hover:shadow-md transition">
+                    <h4 class="font-bold text-blue-700 mb-2 uppercase text-xs tracking-wider">${item.t}</h4>
+                    <p class="text-sm text-gray-600">${item.d}</p>
+                </div>
+            `).join('');
+            lucide.createIcons(); // Recriar ícones se existirem no grid
+        }
+
+        // --- LÓGICA DO QUIZ ---
+        let currentQuizIdx = 0;
+        let quizScore = 0;
+
+        function startQuiz() {
+            document.getElementById('quiz-intro').classList.add('hidden');
+            document.getElementById('quiz-game').classList.remove('hidden');
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            const data = quizData[currentQuizIdx];
+            document.getElementById('quiz-progress').innerText = `Questão ${currentQuizIdx + 1} de ${quizData.length}`;
+            document.getElementById('quiz-bar').style.width = `${((currentQuizIdx + 1) / quizData.length) * 100}%`;
+            document.getElementById('quiz-question').innerText = data.q;
+
+            const optionsBox = document.getElementById('quiz-options');
+            optionsBox.innerHTML = '';
+
+            data.o.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = "w-full text-left p-5 border-2 border-gray-100 rounded-2xl hover:border-blue-400 font-semibold transition-all shadow-sm bg-white";
+                btn.innerText = opt;
+                btn.onclick = () => checkAnswer(idx, btn);
+                optionsBox.appendChild(btn);
+            });
+
+            document.getElementById('quiz-feedback').classList.add('hidden');
+            document.getElementById('btn-next').classList.add('hidden');
+        }
+
+        function checkAnswer(idx, btn) {
+            const data = quizData[currentQuizIdx];
+            const options = document.getElementById('quiz-options').querySelectorAll('button');
+            options.forEach(b => b.disabled = true);
+
+            const feedback = document.getElementById('quiz-feedback');
+            const fText = document.getElementById('feedback-text');
+            feedback.classList.remove('hidden');
+
+            if (idx === data.a) {
+                quizScore++;
+                btn.classList.add('border-green-500', 'bg-green-50');
+                feedback.className = "mt-10 p-6 rounded-2xl bg-green-50 text-green-800 border border-green-200";
+                fText.innerHTML = "<b>Correto!</b> " + data.hint;
+            } else {
+                btn.classList.add('border-red-500', 'bg-red-50');
+                options[data.a].classList.add('border-green-400', 'bg-green-50/30');
+                feedback.className = "mt-10 p-6 rounded-2xl bg-red-50 text-red-800 border border-red-200";
+                fText.innerHTML = "<b>Incorreto.</b> " + data.hint;
+            }
+            document.getElementById('btn-next').classList.remove('hidden');
+            lucide.createIcons();
+        }
+
+        function nextQuestion() {
+            currentQuizIdx++;
+            if (currentQuizIdx < quizData.length) {
+                loadQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        function showResults() {
+            document.getElementById('quiz-game').classList.add('hidden');
+            document.getElementById('quiz-result').classList.remove('hidden');
+            document.getElementById('quiz-score-display').innerText = `${quizScore} / ${quizData.length}`;
+            lucide.createIcons();
+        }
+
+        function resetQuiz() {
+            currentQuizIdx = 0;
+            quizScore = 0;
+            document.getElementById('quiz-result').classList.add('hidden');
+            document.getElementById('quiz-intro').classList.remove('hidden');
+            lucide.createIcons();
+        }
+
+        // --- LÓGICA FLASHCARDS ---
+        const flashcardData = [
+            { f: "Qual o nome do lenço de linho ou algodão bordado originário do Minho?", b: "Lenço dos Namorados." },
+            { f: "Diga 2 nomes alternativos para o Lenço dos Namorados.", b: "Lenço de pedido ou lenço de amor." },
+            { f: "Em que período se originaram os lenços, inspirados na nobreza?", b: "Séculos XVII e XVIII." },
+            { f: "O que significava o rapaz devolver o lenço à rapariga?", b: "Sinal de que não aceitava o compromisso amoroso." },
+            { f: "Que cooperativa foi criada em 1988 para preservar estes lenços?", b: "Aliança Artesanal (Vila Verde)." },
+            { f: "Como se chama a fase de colocar o linho em água?", b: "Cortimenta." },
+            { f: "Como se chama a operação de tirar as sementes?", b: "Ripagem." },
+            { f: "Utensílio com dentes de ferro para separar as sementes.", b: "O ripanço." },
+            { f: "Por que a produção na Madeira era chamada 'tormentos do linho'?", b: "Devido à natureza extremamente trabalhosa e dura das tarefas." },
+            { f: "O que é uma 'estriga'?", b: "Fibra limpa e esticada pronta para ser fiada." },
+            { f: "Qual marca de porcelana tem uma coleção destes lenços?", b: "Vista Alegre." },
+            { f: "Quem fiava a estopa (fio mais grosso) na Madeira?", b: "As crianças." },
+            { f: "Nome do dote de linho que as filhas recebiam na Madeira.", b: "A teia de linho (cerca de 8 metros)." },
+            { f: "Régua de 12 furos usada na urdidura da teia.", b: "A espadilha." },
+            { f: "Que motivos nos lenços se relacionavam com a partida de entes queridos?", b: "Navios e pombas com cartas (Emigração)." }
+        ];
+        let currentCardIdx = 0;
+
+        function updateCard() {
+            const card = flashcardData[currentCardIdx];
+            document.getElementById('card-front-text').innerText = card.f;
+            document.getElementById('card-back-text').innerText = card.b;
+            document.getElementById('card-counter').innerText = `${currentCardIdx + 1} / ${flashcardData.length}`;
+            document.getElementById('flashcard-element').classList.remove('flipped');
+            lucide.createIcons();
+        }
+
+        function flipCard() { document.getElementById('flashcard-element').classList.toggle('flipped'); }
+        function nextCard() { currentCardIdx = (currentCardIdx + 1) % flashcardData.length; updateCard(); }
+        function prevCard() { currentCardIdx = (currentCardIdx - 1 + flashcardData.length) % flashcardData.length; updateCard(); }
+
+        function switchTab(tab) {
+            document.getElementById('container-quiz').classList.toggle('hidden', tab !== 'quiz');
+            document.getElementById('container-cards').classList.toggle('hidden', tab !== 'cards');
+            if (tab === 'cards') updateCard();
+        }
+
+        function toggleAccordion(id) {
+            const item = document.getElementById(id);
+            const isActive = item.classList.contains('active');
+            document.querySelectorAll('.accordion-item').forEach(i => i.classList.remove('active'));
+            if (!isActive) item.classList.add('active');
+            lucide.createIcons();
+        }
+
+        function goBackToMain() {
+            if (window.opener && !window.opener.closed) {
+                window.close();
+            } else {
+                window.location.href = 'index.html';
+            }
+        }
+
+        function openZoom(src) {
+            document.getElementById('zoom-content').src = src;
+            document.getElementById('zoom-modal').style.display = 'flex';
+        }
+
+        function closeZoom() {
+            document.getElementById('zoom-modal').style.display = 'none';
+        }
+    </script>
+</body>
+
+</html>
